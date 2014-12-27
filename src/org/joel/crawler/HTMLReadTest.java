@@ -29,7 +29,7 @@ public class HTMLReadTest {
 		Reader source = new StringReader(
 				"<html><head></head><body>\n"
 						+ "Riding <a href=\"http://wikipedia.org/bycicle\">bycicles</a> "
-						+ "is <a href=\"fun\">fun</a>!\n" + "</body></html>");
+						+ "is <a href='fun'>fun</a>!\n" + "</body></html>");
 		String[] expected = { "http://wikipedia.org/bycicle",
 				"http://example.com/fun" };
 		assertEquals("Found wrong number of URLs", 2,
@@ -43,7 +43,7 @@ public class HTMLReadTest {
 		Reader source = new StringReader(
 				"<html><head></head><body>\n"
 						+ "Riding <a href=\"http://wikipedia.org/bycicle\">bycicles</a> "
-						+ "is <a href=\"fun\">fun</a>!\n" + "</body></html>");
+						+ "is <a href='fun'>fun</a>!\n" + "</body></html>");
 		String[] expected = { "http://wikipedia.org/bycicle",
 				"http://example.com/foo/fun" };
 		assertEquals("Found wrong number of URLs", 2,
@@ -58,9 +58,9 @@ public class HTMLReadTest {
 	public void testParseOneBase() {
 		Reader source = new StringReader(
 				"<html><head></head><body>\n"
-						+ "<base url=\"http://ejemplo.com/\"/>\n"
+						+ "<base href=\"http://ejemplo.com/\"/>\n"
 						+ "Riding <a href=\"http://wikipedia.org/bycicle\">bycicles</a> "
-						+ "is <a href=\"fun\">fun</a>!\n" + "</body></html>");
+						+ "is <a href='fun'>fun</a>!\n" + "</body></html>");
 		String[] expected = { "http://wikipedia.org/bycicle",
 				"http://ejemplo.com/fun" };
 		assertEquals("Found wrong number of URLs", 2,
@@ -73,10 +73,25 @@ public class HTMLReadTest {
 	public void testParseTwoBases() {
 		Reader source = new StringReader(
 				"<html><head></head><body>\n"
-						+ "<base url=\"http://ejemplo.com/\"/>\n"
-						+ "<base url=\"http://not-this-one.com/\"/>\n"
+						+ "<base href=\"http://ejemplo.com/\"/>\n"
+						+ "<base href=\"http://not-this-one.com/\"/>\n"
 						+ "Riding <a href=\"http://wikipedia.org/bycicle\">bycicles</a> "
-						+ "is <a href=\"fun\">fun</a>!\n" + "</body></html>");
+						+ "is <a href='fun'>fun</a>!\n" + "</body></html>");
+		String[] expected = { "http://wikipedia.org/bycicle",
+				"http://ejemplo.com/fun" };
+		assertEquals("Found wrong number of URLs", 2,
+				HTMLRead.getURLs(source, "http://example.com/").length);
+		assertEquals("Found different URLs", expected,
+				HTMLRead.getURLs(source, "http://example.com/").length);
+	}
+
+	@Test
+	public void testParseBadSyntax() {
+		Reader source = new StringReader(
+						"<   	 base prtf=\"bleh\" href=\"http://ejemplo.com/\"/>\n"
+						+ "<  a \n	href=\"http://wikipedia.org/bycicle\"\n"
+						+ "<a href='fun'!\n"
+						+ "<a > href=\"not-this-one.html\"");
 		String[] expected = { "http://wikipedia.org/bycicle",
 				"http://ejemplo.com/fun" };
 		assertEquals("Found wrong number of URLs", 2,
