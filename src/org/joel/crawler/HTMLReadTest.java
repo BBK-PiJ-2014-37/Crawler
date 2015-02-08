@@ -55,7 +55,6 @@ public class HTMLReadTest {
 			e.printStackTrace();
 			fail("Unexpected IOException");
 		}
-		assertEquals("Found wrong number of URLs", 2, res.size());
 		assertEquals("Found different URLs", expected, res);
 	}
 
@@ -77,7 +76,6 @@ public class HTMLReadTest {
 			e.printStackTrace();
 			fail("Unexpected IOException");
 		}
-		assertEquals("Found wrong number of URLs", 2, res.size());
 		assertEquals("Found different URLs", expected, res);
 	}
 
@@ -100,7 +98,6 @@ public class HTMLReadTest {
 			e.printStackTrace();
 			fail("Unexpected IOException");
 		}
-		assertEquals("Found wrong number of URLs", 2, res.size());
 		assertEquals("Found different URLs", expected, res);
 	}
 
@@ -124,7 +121,6 @@ public class HTMLReadTest {
 			e.printStackTrace();
 			fail("Unexpected IOException");
 		}
-		assertEquals("Found wrong number of URLs", 2, res.size());
 		assertEquals("Found different URLs", expected, res);
 	}
 
@@ -147,7 +143,6 @@ public class HTMLReadTest {
 			e.printStackTrace();
 			fail("Unexpected IOException");
 		}
-		assertEquals("Found wrong number of URLs", 2, res.size());
 		assertEquals("Found different URLs", expected, res);
 	}
 
