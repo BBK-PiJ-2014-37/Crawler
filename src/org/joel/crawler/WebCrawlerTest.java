@@ -45,6 +45,30 @@ class URLFetcherMock implements URLFetcher {
 	}
 }
 
+class CandidateQueueMock implements CandidateQueue {
+	private LinkedList<Candidate> candidates;
+	
+	public CandidateQueueMock() {
+		this.candidates = new LinkedList<Candidate>();
+	}
+
+	@Override
+	public void add(Candidate c) {
+		candidates.add(c);
+	}
+
+	@Override
+	public boolean isEmpty() {
+		return candidates.isEmpty();
+	}
+
+	@Override
+	public Candidate poll() {
+		return candidates.poll();
+	}
+	
+}
+
 /**
  * A class to test the search method matching an specific criteria
  * 
@@ -53,7 +77,7 @@ class URLFetcherMock implements URLFetcher {
 class SearchTestWebCrawler extends WebCrawler {
 	
 	public SearchTestWebCrawler(String url, int maxDepth, Writer output,
-			Queue<Candidate> candidates, Set<String> visited, URLFetcher fetcher) {
+			CandidateQueue candidates, Set<String> visited, URLFetcher fetcher) {
 		super(url, maxDepth, output, candidates, visited, fetcher);
 	}
 /**
@@ -76,7 +100,7 @@ public class WebCrawlerTest {
 	private static String doTest(String url, int maxDepth) throws IOException {
 		StringWriter output = new StringWriter();
 		WebCrawler crawler = new WebCrawler(url, maxDepth, output,
-				new LinkedList<Candidate>(), new HashSet<String>(),
+				new CandidateQueueMock(), new HashSet<String>(),
 				new URLFetcherMock());
 		crawler.crawl();
 		return output.toString();
@@ -122,7 +146,7 @@ public class WebCrawlerTest {
 		StringWriter output = new StringWriter();
 		SearchTestWebCrawler sWebCrawler = new SearchTestWebCrawler(
 				"http://www.radiolive.com/", 4, output,
-				new LinkedList<Candidate>(), new HashSet<String>(),
+				new CandidateQueueMock(), new HashSet<String>(),
 				new URLFetcherMock());
 		sWebCrawler.crawl();
 		assertEquals(

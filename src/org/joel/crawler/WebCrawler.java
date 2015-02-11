@@ -3,8 +3,6 @@ package org.joel.crawler;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Set;
 import java.util.List;
 
@@ -18,12 +16,12 @@ public class WebCrawler {
 	private String url;
 	private int maxDepth;
 	private Writer output;
-	Queue<Candidate> candidates;
+	CandidateQueue candidates;
 	Set<String> visited;
 	URLFetcher fetcher;
 	
 	public WebCrawler(String url, int maxDepth, Writer output,
-			Queue<Candidate> candidates, Set<String> visited, URLFetcher fetcher) {
+			CandidateQueue candidates, Set<String> visited, URLFetcher fetcher) {
 		this.url = url;
 		this.maxDepth = maxDepth;
 		this.output = output;
@@ -42,7 +40,7 @@ public class WebCrawler {
 	 * 			a Writer to output the list of urls found
 	 */
 	public WebCrawler(String url, int maxDepth, Writer output) {
-		this(url, maxDepth, output, new LinkedList<Candidate>(),
+		this(url, maxDepth, output, new LargeCandidateQueue(),
 				new HashSet<String>(), new HTTPURLFetcher());
 	}
 	
