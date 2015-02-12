@@ -2,6 +2,7 @@ package org.joel.crawler;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
@@ -38,10 +39,12 @@ public class WebCrawler {
 	 * 			an int indicating the level of depth to finish
 	 * @param output
 	 * 			a Writer to output the list of urls found
+	 * @throws IOException 
 	 */
-	public WebCrawler(String url, int maxDepth, Writer output) {
-		this(url, maxDepth, output, new LargeCandidateQueue(),
-				new HashSet<String>(), new HTTPURLFetcher());
+	public WebCrawler(String url, int maxDepth, Writer output) throws IOException {
+		this(url, maxDepth, output,
+			new LargeCandidateQueue(Paths.get("/tmp/Crawler.queue")),
+			new HashSet<String>(), new HTTPURLFetcher());
 	}
 	
 	/**
