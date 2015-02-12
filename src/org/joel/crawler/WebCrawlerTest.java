@@ -2,17 +2,14 @@ package org.joel.crawler;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-
 import org.junit.Test;
 
 
@@ -95,7 +92,7 @@ class CandidateQueueMock implements CandidateQueue {
  */
 class SearchTestWebCrawler extends WebCrawler {
 	
-	public SearchTestWebCrawler(String url, int maxDepth, Writer output,
+	public SearchTestWebCrawler(String url, int maxDepth, PrintStream output,
 			CandidateQueue candidates, StringSet visited, URLFetcher fetcher) {
 		super(url, maxDepth, output, candidates, visited, fetcher);
 	}
@@ -117,12 +114,14 @@ class SearchTestWebCrawler extends WebCrawler {
 public class WebCrawlerTest {
 	
 	private static String doTest(String url, int maxDepth) throws IOException {
-		StringWriter output = new StringWriter();
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		PrintStream output = new PrintStream(buffer);
 		WebCrawler crawler = new WebCrawler(url, maxDepth, output,
 				new CandidateQueueMock(), new StringSetMock(),
 				new URLFetcherMock());
 		crawler.crawl();
-		return output.toString();
+		output.flush();
+		return buffer.toString();
 	}
 
 	@Test
@@ -162,19 +161,21 @@ public class WebCrawlerTest {
 
 	@Test
 	public void testSearch() throws IOException {
-		StringWriter output = new StringWriter();
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		PrintStream output = new PrintStream(buffer);
 		SearchTestWebCrawler sWebCrawler = new SearchTestWebCrawler(
 				"http://www.radiolive.com/", 4, output,
 				new CandidateQueueMock(), new StringSetMock(),
 				new URLFetcherMock());
 		sWebCrawler.crawl();
+		output.flush();
 		assertEquals(
 				"All urls must finish with /",
 				"http://www.radiolive.com/\nhttp://bbc.com/\nhttp://foo.com/\n"
 						+ "http://bbc4.com/\nhttp://bbc3.com/\nhttp://bbc1.com/\n"
 						+ "http://bbc4.com/whatson/\n"
 						+ "http://bbc4.com/whatson/thisweek/\nhttp://bbc4.com/whatson/nextweek/\n",
-				output.toString());
+				buffer.toString());
 		
 		
 	}

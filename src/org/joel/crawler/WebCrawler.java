@@ -1,7 +1,7 @@
 package org.joel.crawler;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.PrintStream;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -14,12 +14,12 @@ public class WebCrawler {
 
 	private String url;
 	private int maxDepth;
-	private Writer output;
+	private PrintStream output;
 	CandidateQueue candidates;
 	StringSet visited;
 	URLFetcher fetcher;
 	
-	public WebCrawler(String url, int maxDepth, Writer output,
+	public WebCrawler(String url, int maxDepth, PrintStream output,
 			CandidateQueue candidates, StringSet visited, URLFetcher fetcher) {
 		this.url = url;
 		this.maxDepth = maxDepth;
@@ -35,12 +35,12 @@ public class WebCrawler {
 	 * 			the url to start with
 	 * @param maxDepth
 	 * 			an int indicating the level of depth to finish
-	 * @param output
+	 * @param out
 	 * 			a Writer to output the list of urls found
 	 * @throws IOException 
 	 */
-	public WebCrawler(String url, int maxDepth, Writer output) throws IOException {
-		this(url, maxDepth, output,
+	public WebCrawler(String url, int maxDepth, PrintStream out) throws IOException {
+		this(url, maxDepth, out,
 			new LargeCandidateQueue(Paths.get("/tmp/Crawler.queue")),
 			new LargeStringSet(), new HTTPURLFetcher());
 	}
@@ -56,7 +56,7 @@ public class WebCrawler {
 		while (!candidates.isEmpty()) {
 			Candidate candidate = candidates.poll();
 			if (search(candidate.url)) {
-				output.write(candidate.url + "\n");
+				output.println(candidate.url);
 			}
 			if (candidate.level < maxDepth) {
 				List<String> urls = fetcher.fetch(candidate.url);
@@ -84,6 +84,11 @@ public class WebCrawler {
 		return true;
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		int maxDepth = Integer.parseInt(args[0]);
+		String url = args[1];
+		WebCrawler crawler = new WebCrawler(url, maxDepth, System.out);
+		crawler.crawl();
 	}
 }
+
