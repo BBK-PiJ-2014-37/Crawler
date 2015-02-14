@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * A crawler 
@@ -41,8 +42,8 @@ public class WebCrawler {
 	 */
 	public WebCrawler(String url, int maxDepth, PrintStream out) throws IOException {
 		this(url, maxDepth, out,
-			new LargeCandidateQueue(Paths.get("/tmp/Crawler.queue")),
-			new LargeStringSet(), new HTTPURLFetcher());
+			new LargeCandidateQueue(Paths.get("/tmp/Crawler." + UUID.randomUUID()+ ".queue")),
+			new LargeStringSet(Paths.get("/tmp/Crawler."+ UUID.randomUUID() + ".set")), new HTTPURLFetcher());
 	}
 	
 	/**

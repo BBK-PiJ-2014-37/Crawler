@@ -1,5 +1,6 @@
 package org.joel.crawler;
 
+import java.nio.file.Path;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.DriverManager;
@@ -11,13 +12,12 @@ import java.util.UUID;
 public class LargeStringSet implements StringSet {
 	private Connection conn;
 
-	public LargeStringSet() {
+	public LargeStringSet(Path filename) {
 		try {
 			Properties p = System.getProperties();
-			p.setProperty("derby.system.home", "/tmp/");
+			p.setProperty("derby.system.home", filename.getParent().toString());
 			p.setProperty("derby.stream.error.file", "/dev/null");
-			conn = DriverManager.getConnection("jdbc:derby:LargeStringSet." +
-					UUID.randomUUID() + ";create=true", p);
+			conn = DriverManager.getConnection("jdbc:derby:" + filename.getFileName().toString() + ";create=true", p);
 			Statement stat = conn.createStatement();
 			stat.execute("CREATE TABLE elements(item VARCHAR(8192) PRIMARY KEY)");
 		} catch (SQLException e) {
