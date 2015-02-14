@@ -8,7 +8,8 @@ public class LargeStringSetTest {
 
 	@Test
 	public void testAddContains() {
-		StringSet ss = new LargeStringSet();
+		StringSet ss = null;
+		ss = new LargeStringSet();
 		assertFalse(ss.contains("foo"));
 		ss.add("foo");
 		assertTrue(ss.contains("foo"));
