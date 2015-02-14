@@ -10,3 +10,4 @@ For instance:
 
 java webCrawler 3 "http://en.wikipedia.org/wiki/Web_crawler"
 
+I implemented the Queue on top on a file and the Set on top of a Derby database table. 
